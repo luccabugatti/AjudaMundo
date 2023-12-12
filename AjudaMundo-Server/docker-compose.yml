@@ -1,0 +1,29 @@
+version: '3'
+
+networks:
+  ajudamundo:
+    driver:
+      bridge
+
+services: 
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env.db
+    restart: always
+    networks:
+      - ajudamundo
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    env_file:
+      - .env.prod
+    networks:
+      - ajudamundo
+    depends_on:
+      - db
