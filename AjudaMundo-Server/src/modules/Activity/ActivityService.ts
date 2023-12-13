@@ -53,6 +53,21 @@ class ActivityService {
     }
   }
 
+  async getUnassignedActivities(): Promise<ActivityEntity[]> {
+    try {
+      const activities = await this.activityRepository.getUnassignedActivities()
+
+      if (activities) {
+        return activities
+      } else {
+        throw new Error('Erro ao consultar atividades não atribuídas')
+      }
+    } catch (error) {
+      this.logger.debug('ActivityService.getUnassignedActivities error', error)
+      throw error
+    }
+  }
+
   async updateActivity(
     activityId: number,
     ongId: number,

@@ -3,7 +3,7 @@ import { AppDataSource } from '../data-source'
 import { ActivityEntity } from '../entities/Activity.entity'
 import { ActivityType } from '../modules/Activity'
 
-import { DeleteResult } from 'typeorm'
+import { DeleteResult, IsNull, Not } from 'typeorm'
 
 export class ActivityRepository {
   constructor(private readonly logger: Logger) { }
@@ -76,6 +76,27 @@ export class ActivityRepository {
       return activities
     } catch (error) {
       this.logger.debug('Erro ao realizar consulta de atividades do usuário!', error)
+      throw error
+    }
+  }
+
+  async getUnassignedActivities(): Promise<ActivityEntity[] | null> {
+    try {
+      this.logger.debug(`Iniciando consulta de atividades não atribuídas...`)
+      const activyRepository = AppDataSource.getRepository(ActivityEntity)
+
+      const activities = await activyRepository.find({
+        where: {
+          userId: IsNull(),
+          status: 0
+        }
+      })
+
+      this.logger.debug(`Retorno da consulta: ${activities}`)
+
+      return activities
+    } catch (error) {
+      this.logger.debug('Erro ao realizar consulta de atividades não atribuídas!', error)
       throw error
     }
   }

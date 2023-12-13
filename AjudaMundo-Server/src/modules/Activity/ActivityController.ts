@@ -98,7 +98,7 @@ class ActivityController {
           user.userId,
         )
 
-        return res.status(201).json({
+        return res.status(200).json({
           activities,
         })
       } else {
@@ -111,6 +111,51 @@ class ActivityController {
           erro: true,
           message: error.message,
         })
+      } else {
+        return res.status(500).json({
+          erro: true,
+          message: 'Erro não mapeado',
+        })
+      }
+    }
+  }
+
+  async getUnassignedActivities(req: Request, res: Response) {
+    try {
+      const headers = req.headers
+      const authorizationHeader = headers.authorization
+      const token = authorizationHeader?.split(' ')[1]
+
+      if (token) {
+        const payload = jwt.decode(token)
+
+        const { email } = payload as { email: string }
+        
+        await this.userService.findUserByEmail(email)
+
+        const activities = await this.activityService.getUnassignedActivities()
+
+        return res.status(200).json({
+          activities,
+        })
+      } else {
+        throw new Error('Erro ao validar token')
+      }
+    } catch (error) {
+      console.log('ActivityController.getUnassignedActivities error', error)
+      if (error instanceof Error) {
+        switch (error.message) {
+          case 'Usuário não encontrado!':
+            return res.status(428).json({
+              erro: true,
+              message: 'Somente usuários podem consultar atividades não atribuídas',
+            })
+          default:
+            return res.status(500).json({
+              erro: true,
+              message: error.message,
+            })
+        }
       } else {
         return res.status(500).json({
           erro: true,
