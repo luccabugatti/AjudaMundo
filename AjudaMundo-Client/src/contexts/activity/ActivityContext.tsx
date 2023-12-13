@@ -7,6 +7,8 @@ import {
 
 export type ActivityContextType = {
   getActivities: () => Promise<ActivityType[]>
+  getOngActivities: () => Promise<ActivityType[]>
+  getUserActivities: () => Promise<ActivityType[]>
   getActivityById: (activityId: number) => Promise<ActivityType>
   createActivity: (fields: CreateActivityType) => Promise<boolean>
   updateActivity: (fields: UpdateActivityType) => Promise<boolean>

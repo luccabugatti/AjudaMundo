@@ -12,9 +12,10 @@ import {
   AcessType,
   RegisterUser,
   AccountUser,
-  AccountOng
+  AccountOng,
+  AllActivities
 } from '../pages'
-import { HeaderOng, Footer, HeaderUser } from '../components'
+import { HeaderOng, Footer, HeaderUser, Header } from '../components'
 import { AuthContext, RequireAuth } from '../contexts'
 
 import {
@@ -29,13 +30,13 @@ const Routing = () => {
 
 
   const tabsOng = ['home-ong', 'conta-ong']
-  const tabsUser = ['home-user', 'atividades', 'conta-user']
+  const tabsUser = ['home-user', 'todas-atividades', 'conta-user']
 
   return (
     <Router>
       {ong && <HeaderOng loggedIn={true} tabs={tabsOng} />}
       {user && <HeaderUser loggedIn={true} tabs={tabsUser} />}
-      {(!ong && !user) && <HeaderOng loggedIn={false} tabs={[]}/>}
+      {(!ong && !user) && <Header loggedIn={false} tabs={[]}/>}
       <Routes>
         <Route 
           path="/" 
@@ -112,6 +113,14 @@ const Routing = () => {
           element={
             <RequireAuth>
               <EditActivity />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/todas-atividades"
+          element={
+            <RequireAuth>
+              <AllActivities />
             </RequireAuth>
           }
         />

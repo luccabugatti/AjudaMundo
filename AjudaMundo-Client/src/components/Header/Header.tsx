@@ -11,7 +11,7 @@ import {
   HeaderNavigation,
   NavigationItem,
   RouteIndicator,
-} from './HeaderUser.styles'
+} from './Header.styles'
 
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -22,13 +22,15 @@ interface HeaderProps {
   tabs: string[]
 }
 
-export const HeaderUser = ({
+export const Header = ({
   children,
   headerImage = DefaultHeaderImage,
   loggedIn,
   tabs,
 }: HeaderProps) => {
   const navigate = useNavigate()
+  const location = useLocation()
+
   const actualPage = location.pathname.substring(1)
 
   const formatTabName = (tabName: string): string => {

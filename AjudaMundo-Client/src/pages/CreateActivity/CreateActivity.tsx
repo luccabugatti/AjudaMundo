@@ -46,7 +46,7 @@ export const CreateActivity = ({ children }: CreateActivityProps) => {
       })
 
       if (created) {
-        navigate('/home')
+        navigate('/home-ong')
       } else {
         window.alert('Erro ao criar atividade!')
       }

@@ -13,6 +13,38 @@ type ActivityProviderType = {
 export const ActivityProvider = ({ children }: ActivityProviderType) => {
   const api = useApi()
 
+  const getOngActivities = async (): Promise<ActivityType[]> => {
+    try {
+      const token = localStorage.getItem('access-token')
+
+      if (token) {
+        const { activities } = await api.getOngActivities(token)
+        return activities
+      } else {
+        throw new Error('Falha na requisição axios!')
+      }
+    } catch (error) {
+      console.log('Erro ao buscar atividades', error)
+      throw error
+    }
+  }
+
+  const getUserActivities = async (): Promise<ActivityType[]> => {
+    try {
+      const token = localStorage.getItem('access-token')
+
+      if (token) {
+        const { activities } = await api.getUserActivities(token)
+        return activities
+      } else {
+        throw new Error('Falha na requisição axios!')
+      }
+    } catch (error) {
+      console.log('Erro ao buscar atividades', error)
+      throw error
+    }
+  }
+
   const getActivities = async (): Promise<ActivityType[]> => {
     try {
       const token = localStorage.getItem('access-token')
@@ -113,6 +145,8 @@ export const ActivityProvider = ({ children }: ActivityProviderType) => {
     <ActivityContext.Provider
       value={{
         getActivities,
+        getOngActivities,
+        getUserActivities,
         getActivityById,
         createActivity,
         updateActivity,

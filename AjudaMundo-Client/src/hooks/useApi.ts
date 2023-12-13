@@ -51,6 +51,22 @@ export const useApi = () => ({
   },
 
   getActivities: async (token: string) => {
+    const response = await api.get('/activity', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+    return response.data
+  },
+
+  getUserActivities: async (token: string) => {
+    const response = await api.get('/activity/user-activities', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+    return response.data
+  },
+
+  getOngActivities: async (token: string) => {
     const response = await api.get('/activity/ong-activities', {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -102,7 +118,7 @@ export const useApi = () => ({
       },
     )
 
-    if (response.status !== 204) {
+    if (response.status !== 200) {
       throw new Error('Erro ao editar atividade')
     }
 
@@ -114,7 +130,7 @@ export const useApi = () => ({
       headers: { Authorization: `Bearer ${token}` },
     })
 
-    if (response.status !== 204) {
+    if (response.status !== 201) {
       throw new Error('Erro ao editar atividade')
     }
 

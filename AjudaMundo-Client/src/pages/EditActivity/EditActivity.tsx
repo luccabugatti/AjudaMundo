@@ -48,7 +48,7 @@ export const EditActivity = (props: any) => {
       })
 
       if (Editd) {
-        navigate('/home')
+        navigate('/home-ong')
       } else {
         window.alert('Erro ao atualizar atividade!')
       }
@@ -64,7 +64,7 @@ export const EditActivity = (props: any) => {
       console.log('teste', deleted)
 
       if (deleted) {
-        navigate('/home')
+        navigate('/home-ong')
       } else {
         window.alert('Erro ao deletar atividade!')
       }

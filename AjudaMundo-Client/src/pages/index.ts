@@ -10,4 +10,4 @@ export * from './LoginUser'
 export * from './RegisterUser'
 export * from './AccountUser'
 export * from './AccountOng'
-
+export * from './AllActivities'

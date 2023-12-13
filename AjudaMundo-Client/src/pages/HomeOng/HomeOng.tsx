@@ -26,12 +26,12 @@ interface HomeProps {
 
 export const HomeOng = ({ children }: HomeProps) => {
   const [activities, setActivities] = useState<ActivityType[] | []>([])
-  const { getActivities } = useContext(ActivityContext)
+  const { getOngActivities } = useContext(ActivityContext)
   const navigate = useNavigate()
 
   useEffect(() => {
     ;(async () => {
-      const activities = await getActivities()
+      const activities = await getOngActivities()
 
       setActivities(activities)
     })()
