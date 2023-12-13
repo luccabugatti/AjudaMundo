@@ -130,7 +130,7 @@ export const useApi = () => ({
       headers: { Authorization: `Bearer ${token}` },
     })
 
-    if (response.status !== 201) {
+    if (response.status !== 204) {
       throw new Error('Erro ao editar atividade')
     }
 

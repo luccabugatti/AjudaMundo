@@ -61,8 +61,6 @@ export const EditActivity = (props: any) => {
     } else {
       const deleted = await deleteActivity(activityId)
 
-      console.log('teste', deleted)
-
       if (deleted) {
         navigate('/home-ong')
       } else {
