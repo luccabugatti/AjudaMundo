@@ -38,6 +38,21 @@ class ActivityService {
     }
   }
 
+  async getUserAssignedActivities(userId: number): Promise<ActivityEntity[]> {
+    try {
+      const activities = await this.activityRepository.getUserAssignedActivities(userId)
+
+      if (activities) {
+        return activities
+      } else {
+        throw new Error('Erro ao consultar atividades do usuário')
+      }
+    } catch (error) {
+      this.logger.debug('ActivityService.getUserAssignedActivities error', error)
+      throw error
+    }
+  }
+
   async updateActivity(
     activityId: number,
     ongId: number,

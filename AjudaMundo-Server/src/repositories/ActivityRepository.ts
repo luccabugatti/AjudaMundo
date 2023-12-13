@@ -60,6 +60,26 @@ export class ActivityRepository {
     }
   }
 
+  async getUserAssignedActivities(userId: number): Promise<ActivityEntity[] | null> {
+    try {
+      this.logger.debug(`Iniciando consulta de atividades do usuário ${userId}...`)
+      const activyRepository = AppDataSource.getRepository(ActivityEntity)
+
+      const activities = await activyRepository.find({
+        where: {
+          userId,
+        },
+      })
+
+      this.logger.debug(`Retorno da consulta: ${activities}`)
+
+      return activities
+    } catch (error) {
+      this.logger.debug('Erro ao realizar consulta de atividades do usuário!', error)
+      throw error
+    }
+  }
+
   async saveActivity(activity: ActivityType): Promise<ActivityEntity> {
     try {
       this.logger.debug('Iniciando registro de nova atividade...')

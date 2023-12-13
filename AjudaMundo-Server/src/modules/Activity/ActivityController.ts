@@ -79,6 +79,47 @@ class ActivityController {
     }
   }
 
+  async getUserAssignedActivities(
+    req: Request,
+    res: Response,
+  ): Promise<Response<unknown, Record<string, unknown>>> {
+    try {
+      const headers = req.headers
+      const authorizationHeader = headers.authorization
+      const token = authorizationHeader?.split(' ')[1]
+
+      if (token) {
+        const payload = jwt.decode(token)
+
+        const { email } = payload as { email: string }
+        const user = await this.userService.findUserByEmail(email)
+
+        const activities = await this.activityService.getUserAssignedActivities(
+          user.userId,
+        )
+
+        return res.status(201).json({
+          activities,
+        })
+      } else {
+        throw new Error('Erro ao validar token')
+      }
+    } catch (error) {
+      console.log('ActivityController.getUserAssignedActivities error', error)
+      if (error instanceof Error) {
+        return res.status(500).json({
+          erro: true,
+          message: error.message,
+        })
+      } else {
+        return res.status(500).json({
+          erro: true,
+          message: 'Erro não mapeado',
+        })
+      }
+    }
+  }
+
   async updateActivity(
     req: Request,
     res: Response,
@@ -112,26 +153,28 @@ class ActivityController {
           userId,
         } = body
 
-        const activity = await this.activityService.findActivityById(Number(activityId))
+        const activity = await this.activityService.findActivityById(
+          Number(activityId),
+        )
 
         if (activity?.ongId !== validationId) {
           return res.status(403).json({
             erro: true,
-            message: "Somente a ong que criou a atividade pode atualizá-la",
+            message: 'Somente a ong que criou a atividade pode atualizá-la',
           })
         }
 
         if (activity?.status === ActivityStatusEnum.DONE) {
           return res.status(409).json({
             erro: true,
-            message: "Atividades finalizadas não podem ser alteradas",
+            message: 'Atividades finalizadas não podem ser alteradas',
           })
         }
 
         if (activity?.status === ActivityStatusEnum.ASSIGNED) {
           return res.status(409).json({
             erro: true,
-            message: "Atividades atribuídas não podem ser alteradas",
+            message: 'Atividades atribuídas não podem ser alteradas',
           })
         }
 
@@ -151,7 +194,7 @@ class ActivityController {
         )
 
         return res.status(200).json({
-          result
+          result,
         })
       } else {
         throw new Error('Erro ao validar token')
@@ -160,10 +203,10 @@ class ActivityController {
       console.log('ActivityController.updateActivity error', error)
       if (error instanceof Error) {
         switch (error.message) {
-          case "Ong não encontrada!":
+          case 'Ong não encontrada!':
             return res.status(428).json({
               erro: true,
-              message: "Usuários não podem atualizar atividades",
+              message: 'Usuários não podem atualizar atividades',
             })
           default:
             return res.status(500).json({
@@ -192,13 +235,11 @@ class ActivityController {
       const authorizationHeader = headers.authorization
       const token = authorizationHeader?.split(' ')[1]
 
-      if (token) { 
+      if (token) {
         const payload = jwt.decode(token)
 
         const { email } = payload as { email: string }
-        await this.ongService.findOngByEmail(
-          email,
-        )
+        await this.ongService.findOngByEmail(email)
       }
 
       const result = await this.activityService.createActivity({
@@ -220,10 +261,10 @@ class ActivityController {
       console.log('ActivityController.createActivity error', error)
       if (error instanceof Error) {
         switch (error.message) {
-          case "Ong não encontrada!":
+          case 'Ong não encontrada!':
             return res.status(428).json({
               erro: true,
-              message: "Somente ongs podem criar atividades",
+              message: 'Somente ongs podem criar atividades',
             })
           default:
             return res.status(500).json({
@@ -290,32 +331,39 @@ class ActivityController {
         const payload = jwt.decode(token)
 
         const { email } = payload as { email: string }
-        const { ongId: validationId } = await this.ongService.findOngByEmail(email)
+        const { ongId: validationId } = await this.ongService.findOngByEmail(
+          email,
+        )
 
-        const activity = await this.activityService.findActivityById(Number(activityId))
+        const activity = await this.activityService.findActivityById(
+          Number(activityId),
+        )
 
         if (activity?.ongId !== validationId) {
           return res.status(403).json({
             erro: true,
-            message: "Somente a ong que criou a atividade pode deleta-la",
+            message: 'Somente a ong que criou a atividade pode deleta-la',
           })
         }
 
         if (activity?.status === ActivityStatusEnum.DONE) {
           return res.status(409).json({
             erro: true,
-            message: "Atividades finalizadas não podem ser deletadas",
+            message: 'Atividades finalizadas não podem ser deletadas',
           })
         }
 
         if (activity?.status === ActivityStatusEnum.ASSIGNED) {
           return res.status(409).json({
             erro: true,
-            message: "Atividades atribuídas não podem ser deletadas",
+            message: 'Atividades atribuídas não podem ser deletadas',
           })
         }
 
-        await this.activityService.deleteActivityById(Number(activityId), validationId)
+        await this.activityService.deleteActivityById(
+          Number(activityId),
+          validationId,
+        )
       }
 
       return res.status(204).json({
@@ -326,10 +374,10 @@ class ActivityController {
 
       if (error instanceof Error) {
         switch (error.message) {
-          case "Ong não encontrada!":
+          case 'Ong não encontrada!':
             return res.status(428).json({
               erro: true,
-              message: "Usuários não podem deletar atividades",
+              message: 'Usuários não podem deletar atividades',
             })
           default:
             return res.status(500).json({
@@ -365,12 +413,14 @@ class ActivityController {
 
         const user = await this.userService.findUserByEmail(email)
 
-        const activity = await this.activityService.findActivityById(Number(activityId))
+        const activity = await this.activityService.findActivityById(
+          Number(activityId),
+        )
 
         if (activity?.userId) {
           return res.status(409).json({
             erro: true,
-            message: "Atividade já atribuída a um usuário",
+            message: 'Atividade já atribuída a um usuário',
           })
         }
 
@@ -391,10 +441,10 @@ class ActivityController {
 
       if (error instanceof Error) {
         switch (error.message) {
-          case "Usuário não encontrado!":
+          case 'Usuário não encontrado!':
             return res.status(428).json({
               erro: true,
-              message: "Somente usuários podem se atribuir à atividades",
+              message: 'Somente usuários podem se atribuir à atividades',
             })
           default:
             return res.status(500).json({
@@ -433,26 +483,29 @@ class ActivityController {
 
         const user = await this.userService.findUserByEmail(email)
 
-        const activity = await this.activityService.findActivityById(Number(activityId));
+        const activity = await this.activityService.findActivityById(
+          Number(activityId),
+        )
 
-        if(!activity?.userId) {
+        if (!activity?.userId) {
           return res.status(428).json({
             erro: true,
-            message: "Atividade deve estar atribuída a um usuário para ser finalizada",
+            message:
+              'Atividade deve estar atribuída a um usuário para ser finalizada',
           })
         }
 
-        if(activity?.userId !== user.userId) {
+        if (activity?.userId !== user.userId) {
           return res.status(403).json({
             erro: true,
-            message: "Somente o usuário atribuído à atividade pode finaliza-la",
+            message: 'Somente o usuário atribuído à atividade pode finaliza-la',
           })
         }
 
         if (activity?.status === ActivityStatusEnum.DONE) {
           return res.status(409).json({
             erro: true,
-            message: "Atividade já finalizada",
+            message: 'Atividade já finalizada',
           })
         }
 
@@ -474,10 +527,10 @@ class ActivityController {
 
       if (error instanceof Error) {
         switch (error.message) {
-          case "Usuário não encontrado!":
+          case 'Usuário não encontrado!':
             return res.status(428).json({
               erro: true,
-              message: "Somente usuários podem finalizar atividades",
+              message: 'Somente usuários podem finalizar atividades',
             })
           default:
             return res.status(500).json({

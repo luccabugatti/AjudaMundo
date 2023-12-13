@@ -23,6 +23,10 @@ routes.get(
   },
 )
 
+routes.get('/user-activities', validateToken, async (req: Request, res: Response) => {
+  await ActivityFactory().getUserAssignedActivities(req, res)
+})
+
 routes.get('/:id', validateToken, async (req: Request, res: Response) => {
   await ActivityFactory().findActivityById(req, res)
 })
