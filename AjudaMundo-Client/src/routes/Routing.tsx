@@ -28,8 +28,8 @@ const Routing = () => {
   const { ong, user } = useContext(AuthContext)
 
 
-  const tabsOng = ['home', 'conta']
-  const tabsUser = ['home', 'atividades', 'conta']
+  const tabsOng = ['home-ong', 'conta-ong']
+  const tabsUser = ['home-user', 'atividades', 'conta-user']
 
   return (
     <Router>
