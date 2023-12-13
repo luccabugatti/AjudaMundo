@@ -5,9 +5,10 @@ import { OngEntity } from '../../entities/Ong.entity'
 
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
+import { Logger } from 'winston'
 
 class OngService {
-  constructor(private readonly ongRepository: OngRepository) {}
+  constructor(private readonly ongRepository: OngRepository, private readonly logger: Logger) {}
 
   async findAllOngs(): Promise<OngEntity[]> {
     try {
@@ -19,7 +20,7 @@ class OngService {
         throw new Error('Erro ao consultar ongs')
       }
     } catch (error) {
-      console.log('OngService.findAllOngs error', error)
+      this.logger.debug('OngService.findAllOngs error', error)
       throw error
     }
   }
@@ -30,7 +31,7 @@ class OngService {
 
       return result
     } catch (error) {
-      console.log('OngService.updateOng error', error)
+      this.logger.debug('OngService.updateOng error', error)
       throw error
     }
   }
@@ -46,7 +47,7 @@ class OngService {
 
       return result
     } catch (error) {
-      console.log('OngService.createOng error', error)
+      this.logger.debug('OngService.createOng error', error)
       throw error
     }
   }
@@ -61,7 +62,7 @@ class OngService {
         throw new Error('Ong não encontrada!')
       }
     } catch (error) {
-      console.log('OngService.findOngById error', error)
+      this.logger.debug('OngService.findOngById error', error)
       throw error
     }
   }
@@ -76,7 +77,7 @@ class OngService {
         throw new Error('Ong não encontrada!')
       }
     } catch (error) {
-      console.log('OngService.findOngByEmail error', error)
+      this.logger.debug('OngService.findOngByEmail error', error)
       throw error
     }
   }
@@ -103,7 +104,7 @@ class OngService {
 
       return token
     } catch (error) {
-      console.log('OngService.login error', error)
+      this.logger.debug('OngService.login error', error)
       throw error
     }
   }

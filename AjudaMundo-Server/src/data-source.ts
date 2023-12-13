@@ -13,6 +13,7 @@ const DB_PORT = Number(process.env.DB_PORT) || 5432
 const DB_PASSWORD = process.env.DB_PASSWORD || 'root'
 const DB_USER = process.env.DB_USER || 'root'
 const DB_SCHEMA = process.env.DB_SCHEMA || 'appdb'
+const ENVIROMENT = process.env.NODE_ENV || 'development'
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -22,7 +23,7 @@ export const AppDataSource = new DataSource({
   password: DB_PASSWORD,
   database: DB_SCHEMA,
   synchronize: true, // caso isso vá para produção deve ser setado como false, OBRIGATORIAMENTE!
-  logging: true,
+  logging: ENVIROMENT === 'development' ? true : false,
   entities: [UserEntity, OngEntity, ActivityStatusEntity, ActivityEntity],
   subscribers: [],
   migrations: ['src/db/migrations/**/*'],

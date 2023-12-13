@@ -8,23 +8,14 @@ import { UserRepository } from '../../src/repositories/UserRepository'
 import { UserService } from '../../src/modules/User'
 import { createLogger } from 'winston'
 
-describe('POST Create Activity', () => {
-  let activityData = {
-    name: 'Teste',
-    points: 20,
-    description: 'Testando a description',
-    mainImg: '',
-    status: 0,
-    ongId: 1,
-    userId: null,
-  }
+describe('POST Assign Activity', () => {
+  let ongAuthToken: string;
+  let userAuthToken: string;
+  let secondUserAuthToken: string;
 
   const logger = createLogger({
     silent: true,
   });
-
-  let ongAuthToken: string;
-  let userAuthToken: string;
 
   beforeAll(async () => {
     await AppDataSource.initialize();
@@ -41,30 +32,62 @@ describe('POST Create Activity', () => {
 
     await getOngAuthToken();
     await getUserAuthToken();
+    await getSecondUserAuthToken();
   })
 
-  test('should create a new activity', async () => {
-    const response = await request(app).post('/activity').send(activityData).set('Authorization', `Bearer ${ongAuthToken}`);
+  test('user should be able to assign an activity for itself', async () => {
+    let activityData = {
+      name: 'Teste',
+      points: 20,
+      description: 'Testando a description',
+      mainImg: '',
+      status: 0,
+      ongId: 1,
+      userId: null,
+    }
+
+    const createdActivity = await request(app).post('/activity').send(activityData).set('Authorization', `Bearer ${ongAuthToken}`);
+
+    const response = await request(app).post(`/activity/assign/${createdActivity.body.result.activityId}`).set('Authorization', `Bearer ${userAuthToken}`);
 
     expect(response.status).toBe(200)
-    expect(response.body.result).toHaveProperty('activityId')
-    expect(response.body.result).toHaveProperty('name')
-    expect(response.body.result).toHaveProperty('points')
-    expect(response.body.result).toHaveProperty('description')
-    expect(response.body.result).toHaveProperty('mainImg')
-    expect(response.body.result).toHaveProperty('status')
+    expect(response.body.message).toBe("Atividade atribuída com sucesso!")
   })
 
-  test('should return error when try to create a new activity with invalid data', async () => {
-    const response = await request(app).post('/activity').send({}).set('Authorization', `Bearer ${ongAuthToken}`);
+  test('user should not assign to already assigned activity', async () => {
+    let activityData = {
+      name: 'Teste',
+      points: 20,
+      description: 'Testando a description',
+      mainImg: '',
+      status: 0,
+      ongId: 1,
+      userId: null,
+    }
 
-    expect(response.status).toBe(400)
-    expect(response.body).toHaveProperty('error')
-    expect(response.body).toHaveProperty('message')
-  })
+    const createdActivity = await request(app).post('/activity').send(activityData).set('Authorization', `Bearer ${ongAuthToken}`);
 
-  test('normal user should not be able to create a new activity', async () => {
-    const response = await request(app).post('/activity').send(activityData).set('Authorization', `Bearer ${userAuthToken}`);
+    await request(app).post(`/activity/assign/${createdActivity.body.result.activityId}`).set('Authorization', `Bearer ${userAuthToken}`);
+
+    const response = await request(app).post(`/activity/assign/${createdActivity.body.result.activityId}`).set('Authorization', `Bearer ${secondUserAuthToken}`)
+
+    expect(response.status).toBe(409)
+  });
+
+  test('ong should not be able to assign to an activity', async () => {
+    let activityData = {
+      name: 'Teste',
+      points: 20,
+      description: 'Testando a description',
+      mainImg: '',
+      status: 0,
+      ongId: 1,
+      userId: null,
+    }
+
+    const createdActivity = await request(app).post('/activity').send(activityData).set('Authorization', `Bearer ${ongAuthToken}`);
+
+    const response = await request(app).post(`/activity/assign/${createdActivity.body.result.activityId}`).set('Authorization', `Bearer ${ongAuthToken}`)
 
     expect(response.status).toBe(428)
   })
@@ -149,6 +172,47 @@ describe('POST Create Activity', () => {
     }
 
     userAuthToken = response.body.token;
+  }
+
+  const getSecondUserAuthToken = async () => {
+    const userRepository = new UserRepository(logger);
+    const userService = new UserService(userRepository, logger);
+
+    const testUserData = {
+      name: 'User Integration Test 2',
+      email: 'user.integration.test2@gmail.com',
+      password: 'user123',
+    }
+
+    let user;
+
+    try {
+      user = await userService.findUserByEmail(testUserData.email);
+      
+    } catch (error: any) {
+      if (error.message !== 'Usuário não encontrado!') {
+        throw new Error('Não foi possível pegar user test');
+      }
+
+      user = await userService.createUser(testUserData);
+
+      if(!user) {
+        throw new Error('Não foi criar nova user de teste');
+      }
+    }
+    
+    const response = await request(app)
+      .post('/user/login')
+      .send({
+        email: testUserData.email,
+        password: testUserData.password,
+      });
+
+    if(response.status !== 200) {
+      throw new Error('Não foi possível logar na user');
+    }
+
+    secondUserAuthToken = response.body.token;
   }
 
   afterAll(async () => {

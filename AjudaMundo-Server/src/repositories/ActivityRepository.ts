@@ -1,3 +1,4 @@
+import { Logger } from 'winston'
 import { AppDataSource } from '../data-source'
 import { ActivityEntity } from '../entities/Activity.entity'
 import { ActivityType } from '../modules/Activity'
@@ -5,41 +6,43 @@ import { ActivityType } from '../modules/Activity'
 import { DeleteResult } from 'typeorm'
 
 export class ActivityRepository {
+  constructor(private readonly logger: Logger) { }
+
   async getActivityById(activityId: number): Promise<ActivityEntity | null> {
     try {
-      console.log(`Iniciando consulta de atividade pelo id: ${activityId}...`)
+      this.logger.debug(`Iniciando consulta de atividade pelo id: ${activityId}...`)
       const activyRepository = AppDataSource.getRepository(ActivityEntity)
 
       const activity = await activyRepository.findOneBy({ activityId })
 
-      console.log(`Retorno da consulta: ${activity}`)
+      this.logger.debug(`Retorno da consulta: ${activity}`)
 
       return activity
     } catch (error) {
-      console.log('Erro ao realizar consulta de atividade!', error)
+      this.logger.debug('Erro ao realizar consulta de atividade!', error)
       throw error
     }
   }
 
   async getActivities(): Promise<ActivityEntity[] | null> {
     try {
-      console.log('Iniciando consulta de atividades...')
+      this.logger.debug('Iniciando consulta de atividades...')
       const activyRepository = AppDataSource.getRepository(ActivityEntity)
 
       const activities = await activyRepository.find()
 
-      console.log(`Retorno da consulta: ${activities}`)
+      this.logger.debug(`Retorno da consulta: ${activities}`)
 
       return activities
     } catch (error) {
-      console.log('Erro ao realizar consulta de atividades!', error)
+      this.logger.debug('Erro ao realizar consulta de atividades!', error)
       throw error
     }
   }
 
   async getOngActivities(ongId: number): Promise<ActivityEntity[] | null> {
     try {
-      console.log(`Iniciando consulta de atividades da ong ${ongId}...`)
+      this.logger.debug(`Iniciando consulta de atividades da ong ${ongId}...`)
       const activyRepository = AppDataSource.getRepository(ActivityEntity)
 
       const activities = await activyRepository.find({
@@ -48,27 +51,27 @@ export class ActivityRepository {
         },
       })
 
-      console.log(`Retorno da consulta: ${activities}`)
+      this.logger.debug(`Retorno da consulta: ${activities}`)
 
       return activities
     } catch (error) {
-      console.log('Erro ao realizar consulta de atividades da ong!', error)
+      this.logger.debug('Erro ao realizar consulta de atividades da ong!', error)
       throw error
     }
   }
 
   async saveActivity(activity: ActivityType): Promise<ActivityEntity> {
     try {
-      console.log('Iniciando registro de nova atividade...')
+      this.logger.debug('Iniciando registro de nova atividade...')
       const activyRepository = AppDataSource.getRepository(ActivityEntity)
 
       const response = await activyRepository.save(activity)
 
-      console.log(`Retorno da consulta: ${response}`)
+      this.logger.debug(`Retorno da consulta: ${response}`)
 
       return response
     } catch (error) {
-      console.log('Erro ao realizar cadastro de atividade!', error)
+      this.logger.debug('Erro ao realizar cadastro de atividade!', error)
       throw error
     }
   }
@@ -78,8 +81,8 @@ export class ActivityRepository {
     activity: Partial<ActivityType>,
   ): Promise<ActivityEntity> {
     try {
-      console.log(`Iniciando update de atividade com id: ${activityId}...`)
-      console.log('Dados do update', activity)
+      this.logger.debug(`Iniciando update de atividade com id: ${activityId}...`)
+      this.logger.debug('Dados do update', activity)
       const activyRepository = AppDataSource.getRepository(ActivityEntity)
 
       const response = await activyRepository.save({
@@ -87,28 +90,28 @@ export class ActivityRepository {
         ...activity,
       })
 
-      console.log(`Retorno do update: ${response}`)
+      this.logger.debug(`Retorno do update: ${response}`)
 
       return response
     } catch (error) {
-      console.log('Erro ao realizar update de atividade!', error)
+      this.logger.debug('Erro ao realizar update de atividade!', error)
       throw error
     }
   }
 
   async deleteActivity(activityId: number): Promise<DeleteResult> {
     try {
-      console.log(`Iniciando exclusão de atividade pelo id: ${activityId}...`)
+      this.logger.debug(`Iniciando exclusão de atividade pelo id: ${activityId}...`)
       const activyRepository = AppDataSource.getRepository(ActivityEntity)
 
       const response = await activyRepository.delete({ activityId })
 
-      console.log(`Retorno da exclusão`)
-      console.log(response)
+      this.logger.debug(`Retorno da exclusão`)
+      this.logger.debug(response)
 
       return response
     } catch (error) {
-      console.log('Erro ao realizar exclusão de atividade!', error)
+      this.logger.debug('Erro ao realizar exclusão de atividade!', error)
       throw error
     }
   }

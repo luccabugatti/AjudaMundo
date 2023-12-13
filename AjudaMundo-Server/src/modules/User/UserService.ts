@@ -5,9 +5,10 @@ import { UserEntity } from '../../entities/User.entity'
 
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
+import { Logger } from 'winston'
 
 class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository, private readonly logger: Logger) {}
 
   async findAllUsers(): Promise<UserEntity[]> {
     try {
@@ -19,7 +20,7 @@ class UserService {
         throw new Error('Erro ao consultar usuários')
       }
     } catch (error) {
-      console.log('UserService.findAllUsers error', error)
+      this.logger.debug('UserService.findAllUsers error', error)
       throw error
     }
   }
@@ -30,7 +31,7 @@ class UserService {
 
       return result
     } catch (error) {
-      console.log('UserService.updateUser error', error)
+      this.logger.debug('UserService.updateUser error', error)
       throw error
     }
   }
@@ -42,13 +43,13 @@ class UserService {
         password: await this.encryptPassword(user.password),
       }
 
-      console.log('Usuário criado com sucesso!')
+      this.logger.debug('Usuário criado com sucesso!')
 
       const result = await this.userRepository.saveUser(formatedUser)
 
       return result
     } catch (error) {
-      console.log('UserService.createUser error', error)
+      this.logger.debug('UserService.createUser error', error)
       throw error
     }
   }
@@ -63,7 +64,7 @@ class UserService {
         throw new Error('Usuário não encontrado!')
       }
     } catch (error) {
-      console.log('UserService.findUserById error', error)
+      this.logger.debug('UserService.findUserById error', error)
       throw error
     }
   }
@@ -78,7 +79,7 @@ class UserService {
         throw new Error('Usuário não encontrado!')
       }
     } catch (error) {
-      console.log('UserService.findUserByEmail error', error)
+      this.logger.debug('UserService.findUserByEmail error', error)
       throw error
     }
   }
@@ -108,7 +109,7 @@ class UserService {
 
       return token
     } catch (error) {
-      console.log('UserService.login error', error)
+      this.logger.debug('UserService.login error', error)
       throw error
     }
   }

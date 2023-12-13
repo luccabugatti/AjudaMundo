@@ -19,13 +19,15 @@ app.use(
   }),
 )
 
-InitializeDatabase()
+if(process.env.NODE_ENV !== 'test') {
+  InitializeDatabase()
   .then(() => {
     console.log('Banco inicializado com sucesso')
   })
   .catch((e) => {
     console.log('erro ao iniciar banco', e)
   })
+}
 
 app.use(express.json())
 

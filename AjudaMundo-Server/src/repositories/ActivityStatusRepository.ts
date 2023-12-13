@@ -1,12 +1,15 @@
+import { Logger } from 'winston'
 import { AppDataSource } from '../data-source'
 import { ActivityStatusEntity } from '../entities/ActivityStatus.entity'
 
 export class ActivityStatusRepository {
+  constructor(private readonly logger: Logger) {}
+
   async getActivityStatusById(
     activityStatusId: number,
   ): Promise<ActivityStatusEntity | null> {
     try {
-      console.log(
+      this.logger.debug(
         `Iniciando consulta de status de atividades pelo id: ${activityStatusId}...`,
       )
       const activityStatusRepository =
@@ -16,28 +19,28 @@ export class ActivityStatusRepository {
         activityStatusId,
       })
 
-      console.log(`Retorno da consulta: ${ActivityStatus}`)
+      this.logger.debug(`Retorno da consulta: ${ActivityStatus}`)
 
       return ActivityStatus
     } catch (error) {
-      console.log('Erro ao realizar consulta de status de atividades!', error)
+      this.logger.debug('Erro ao realizar consulta de status de atividades!', error)
       throw error
     }
   }
 
   async getActivityStatuss(): Promise<ActivityStatusEntity[] | null> {
     try {
-      console.log('Iniciando consulta de status de atividades...')
+      this.logger.debug('Iniciando consulta de status de atividades...')
       const activityStatusRepository =
         AppDataSource.getRepository(ActivityStatusEntity)
 
       const ActivityStatuss = await activityStatusRepository.find()
 
-      console.log(`Retorno da consulta: ${ActivityStatuss}`)
+      this.logger.debug(`Retorno da consulta: ${ActivityStatuss}`)
 
       return ActivityStatuss
     } catch (error) {
-      console.log('Erro ao realizar consulta de status de atividades!', error)
+      this.logger.debug('Erro ao realizar consulta de status de atividades!', error)
       throw error
     }
   }
@@ -46,7 +49,7 @@ export class ActivityStatusRepository {
   async saveActivityStatus(name: any): Promise<any> {
     // TODO: encontrar tipagem para retorno
     try {
-      console.log('Iniciando registro de novo status de atividades...')
+      this.logger.debug('Iniciando registro de novo status de atividades...')
       const activityStatusRepository =
         AppDataSource.getRepository(ActivityStatusEntity)
 
@@ -54,11 +57,11 @@ export class ActivityStatusRepository {
         name,
       })
 
-      console.log(`Retorno da consulta: ${response}`)
+      this.logger.debug(`Retorno da consulta: ${response}`)
 
       return response
     } catch (error) {
-      console.log('Erro ao realizar cadastro de status de atividades!', error)
+      this.logger.debug('Erro ao realizar cadastro de status de atividades!', error)
       throw error
     }
   }
@@ -69,7 +72,7 @@ export class ActivityStatusRepository {
   ): Promise<any> {
     // TODO: encontrar tipagem para retorno
     try {
-      console.log(
+      this.logger.debug(
         `Iniciando update de status de atividades com id: ${activityStatusId}...`,
       )
       const activityStatusRepository =
@@ -80,11 +83,11 @@ export class ActivityStatusRepository {
         name,
       })
 
-      console.log(`Retorno do update: ${response}`)
+      this.logger.debug(`Retorno do update: ${response}`)
 
       return response
     } catch (error) {
-      console.log('Erro ao realizar update de status de atividades!', error)
+      this.logger.debug('Erro ao realizar update de status de atividades!', error)
       throw error
     }
   }
@@ -92,7 +95,7 @@ export class ActivityStatusRepository {
   // TODO: se possível arrumar tipagem do retorno desse método
   async deleteActivityStatus(activityStatusId: number): Promise<any> {
     try {
-      console.log(
+      this.logger.debug(
         `Iniciando exclusão de status de atividades pelo id: ${activityStatusId}...`,
       )
       const activityStatusRepository =
@@ -102,11 +105,11 @@ export class ActivityStatusRepository {
         activityStatusId,
       })
 
-      console.log(`Retorno da exclusão: ${response}`)
+      this.logger.debug(`Retorno da exclusão: ${response}`)
 
       return response
     } catch (error) {
-      console.log('Erro ao realizar exclusão de status de atividades!', error)
+      this.logger.debug('Erro ao realizar exclusão de status de atividades!', error)
       throw error
     }
   }

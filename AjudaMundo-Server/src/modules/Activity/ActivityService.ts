@@ -2,9 +2,11 @@ import { ActivityType } from './interfaces'
 
 import { ActivityRepository } from '../../repositories/ActivityRepository'
 import { ActivityEntity } from '../../entities/Activity.entity'
+import { ActivityStatusEnum } from './enums'
+import { Logger } from 'winston'
 
 class ActivityService {
-  constructor(private readonly activityRepository: ActivityRepository) {}
+  constructor(private readonly activityRepository: ActivityRepository, private readonly logger: Logger) {}
 
   async findAllActivities(): Promise<ActivityEntity[]> {
     try {
@@ -16,7 +18,7 @@ class ActivityService {
         throw new Error('Erro ao consultar atividades')
       }
     } catch (error) {
-      console.log('ActivityService.findAllActivities error', error)
+      this.logger.debug('ActivityService.findAllActivities error', error)
       throw error
     }
   }
@@ -31,7 +33,7 @@ class ActivityService {
         throw new Error('Erro ao consultar atividades da ong')
       }
     } catch (error) {
-      console.log('ActivityService.getOngActivities error', error)
+      this.logger.debug('ActivityService.getOngActivities error', error)
       throw error
     }
   }
@@ -57,7 +59,7 @@ class ActivityService {
 
       return result
     } catch (error) {
-      console.log('ActivityService.updateActivity error', error)
+      this.logger.debug('ActivityService.updateActivity error', error)
       throw error
     }
   }
@@ -68,7 +70,7 @@ class ActivityService {
 
       return result
     } catch (error) {
-      console.log('ActivityService.createActivity error', error)
+      this.logger.debug('ActivityService.createActivity error', error)
       throw error
     }
   }
@@ -83,7 +85,7 @@ class ActivityService {
         throw new Error('Atividade não encontrado!')
       }
     } catch (error) {
-      console.log('ActivityService.findActivityById error', error)
+      this.logger.debug('ActivityService.findActivityById error', error)
       throw error
     }
   }
@@ -111,7 +113,7 @@ class ActivityService {
         throw new Error('Atividade não existe!')
       }
     } catch (error) {
-      console.log('ActivityService.deleteActivityById error', error)
+      this.logger.debug('ActivityService.deleteActivityById error', error)
       throw error
     }
   }
@@ -121,22 +123,22 @@ class ActivityService {
     userId: number,
   ): Promise<ActivityEntity> {
     try {
-      console.log(
+      this.logger.debug(
         `Atribuindo atividade ${activityId} ao usuário de id: ${userId}...`,
       )
-
+      
       const result = await this.activityRepository.updateActivity(activityId, {
         userId,
-        status: 1,
+        status: ActivityStatusEnum.ASSIGNED,
       })
 
-      console.log(
+      this.logger.debug(
         `Atividade ${activityId} ao usuário de id: ${userId} com sucesso!`,
       )
 
       return result
     } catch (error) {
-      console.log('ActivityService.assingToActivity error', error)
+      this.logger.debug('ActivityService.assingToActivity error', error)
       throw error
     }
   }
@@ -151,14 +153,14 @@ class ActivityService {
 
       if (activity?.userId === userId) {
         await this.activityRepository.updateActivity(activiyId, {
-          status: 2,
+          status: ActivityStatusEnum.DONE,
           realizationField,
         })
       }
 
       return true
     } catch (error) {
-      console.log('ActivityService.doActivity error', error)
+      this.logger.debug('ActivityService.doActivity error', error)
       throw error
     }
   }

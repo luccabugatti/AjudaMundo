@@ -1,3 +1,4 @@
+import { Logger } from 'winston'
 import { AppDataSource } from '../data-source'
 import { OngEntity } from '../entities/Ong.entity'
 import { OngType } from '../modules/Ong'
@@ -5,74 +6,76 @@ import { OngType } from '../modules/Ong'
 import { DeleteResult } from 'typeorm'
 
 export class OngRepository {
+  constructor(private readonly logger: Logger) {}
+
   async getOngById(ongId: number): Promise<OngEntity | null> {
     try {
-      console.log(`Iniciando consulta de ong pelo id: ${ongId}...`)
+      this.logger.debug(`Iniciando consulta de ong pelo id: ${ongId}...`)
       const ongRepository = AppDataSource.getRepository(OngEntity)
 
       const ong = await ongRepository.findOneBy({ ongId })
 
-      console.log(`Retorno da consulta: ${ong}`)
+      this.logger.debug(`Retorno da consulta: ${ong}`)
 
       return ong
     } catch (error) {
-      console.log('Erro ao realizar consulta de ong!', error)
+      this.logger.debug('Erro ao realizar consulta de ong!', error)
       throw error
     }
   }
 
   async getOngByEmail(email: string): Promise<OngEntity | null> {
     try {
-      console.log(`Iniciando consulta de ong pelo email: ${email}...`)
+      this.logger.debug(`Iniciando consulta de ong pelo email: ${email}...`)
       const ongRepository = AppDataSource.getRepository(OngEntity)
 
       const ong = await ongRepository.findOneBy({ email })
 
-      console.log(`Retorno da consulta:`)
-      console.log(ong)
+      this.logger.debug(`Retorno da consulta:`)
+      this.logger.debug(ong)
 
       return ong
     } catch (error) {
-      console.log('Erro ao realizar consulta de ong!', error)
+      this.logger.debug('Erro ao realizar consulta de ong!', error)
       throw error
     }
   }
 
   async getOngs(): Promise<OngEntity[] | null> {
     try {
-      console.log('Iniciando consulta de ongs...')
+      this.logger.debug('Iniciando consulta de ongs...')
       const ongRepository = AppDataSource.getRepository(OngEntity)
 
       const ongs = await ongRepository.find()
 
-      console.log(`Retorno da consulta: ${ongs}`)
+      this.logger.debug(`Retorno da consulta: ${ongs}`)
 
       return ongs
     } catch (error) {
-      console.log('Erro ao realizar consulta de ongs!', error)
+      this.logger.debug('Erro ao realizar consulta de ongs!', error)
       throw error
     }
   }
 
   async saveOng(ong: OngType): Promise<OngEntity> {
     try {
-      console.log('Iniciando registro de nova ong...')
+      this.logger.debug('Iniciando registro de nova ong...')
       const ongRepository = AppDataSource.getRepository(OngEntity)
 
       const response = await ongRepository.save(ong)
 
-      console.log(`Retorno da consulta: ${response}`)
+      this.logger.debug(`Retorno da consulta: ${response}`)
 
       return response
     } catch (error) {
-      console.log('Erro ao realizar cadastro de ong!', error)
+      this.logger.debug('Erro ao realizar cadastro de ong!', error)
       throw error
     }
   }
 
   async updateOng(ongId: number, ong: OngType): Promise<OngEntity> {
     try {
-      console.log(`Iniciando update de ong com id: ${ongId}...`)
+      this.logger.debug(`Iniciando update de ong com id: ${ongId}...`)
       const ongRepository = AppDataSource.getRepository(OngEntity)
 
       const response = await ongRepository.save({
@@ -80,27 +83,27 @@ export class OngRepository {
         ...ong,
       })
 
-      console.log(`Retorno do update: ${response}`)
+      this.logger.debug(`Retorno do update: ${response}`)
 
       return response
     } catch (error) {
-      console.log('Erro ao realizar update de ong!', error)
+      this.logger.debug('Erro ao realizar update de ong!', error)
       throw error
     }
   }
 
   async deleteOng(ongId: number): Promise<DeleteResult> {
     try {
-      console.log(`Iniciando exclusão de ong pelo id: ${ongId}...`)
+      this.logger.debug(`Iniciando exclusão de ong pelo id: ${ongId}...`)
       const ongRepository = AppDataSource.getRepository(OngEntity)
 
       const response = await ongRepository.delete({ ongId })
 
-      console.log(`Retorno da exclusão: ${response}`)
+      this.logger.debug(`Retorno da exclusão: ${response}`)
 
       return response
     } catch (error) {
-      console.log('Erro ao realizar exclusão de ong!', error)
+      this.logger.debug('Erro ao realizar exclusão de ong!', error)
       throw error
     }
   }
