@@ -1,6 +1,6 @@
-import { useContext, useState } from 'react'
+import { useContext} from 'react'
 
-import { Container, FormTitle, Form, Input, Button } from './Register.styles'
+import { Container, FormTitle, Form, Input, Button } from './RegisterOng.styles'
 import { AuthContext } from '../../contexts'
 
 import { useForm } from 'react-hook-form'
@@ -10,25 +10,20 @@ interface RegisterProps {
   children?: JSX.Element
 }
 
-export const Register = ({ children }: RegisterProps) => {
+export const RegisterOng = ({ children }: RegisterProps) => {
   const { register, handleSubmit } = useForm()
-  const { signUp } = useContext(AuthContext)
+  const { signUpOng } = useContext(AuthContext)
   const navigate = useNavigate()
-  const [userType, setUserType] = useState('ong')
 
   const handleRegister = async (
     name: string,
     email: string,
     password: string,
   ) => {
-    const loggedIn = await signUp(name, email, password)
+    const loggedIn = await signUpOng(name, email, password)
 
     if (loggedIn) {
-      if (userType === 'ong') {
-        navigate('/home');
-      } else if (userType === 'user') {
-        navigate('/home-user');
-      }
+      navigate('/home-ong');
     } else {
       window.alert('Erro ao realizar cadastro!');
     }
@@ -43,24 +38,11 @@ export const Register = ({ children }: RegisterProps) => {
       >
         <FormTitle>Cadastro</FormTitle>
 
-        <label>
-          Tipo de Usuário:
-          <select value={userType} onChange={(e) => setUserType(e.target.value)}>
-            <option value="ong">ONG</option>
-            <option value="user">Usuário</option>
-          </select>
-        </label>
-
-        <Input
-          placeholder={`${userType === 'ong' ? 'ONG' : 'Usuário'} name`}
-          type={'text'}
-          {...register('name')}
-        />
-
+        <Input placeholder="Nome da ONG" type={'name'} {...register('name')} />
         <Input placeholder="E-mail" type={'email'} {...register('email')} />
         <Input placeholder="Senha" type={'password'} {...register('password')} />
 
-        <Button type="submit">Cadastrar {userType === 'ong' ? 'ONG' : 'Usuário'}</Button>
+        <Button type="submit">Cadastrar ONG</Button>
         
         <h1>Ou</h1>
         <Button onClick={() => navigate('/')}>

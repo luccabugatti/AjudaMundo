@@ -10,9 +10,9 @@ import {
   LabelOngName,
   LabelOngEmail,
   ButtonLogout,
-} from './Account.styles'
+} from './AccountOng.styles'
 
-export const Account = () => {
+export const AccountOng = () => {
   const { ong, signOut } = useContext(AuthContext)
 
   if (!ong) {

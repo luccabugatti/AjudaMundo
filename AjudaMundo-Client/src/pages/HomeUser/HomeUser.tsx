@@ -8,8 +8,6 @@ import {
   WrapperInformation,
   LabelInformation,
   Indicator,
-  WrapperRegisterActivity,
-  IconRegisterActivity,
   IconHero,
 } from './HomeUser.styles'
 import ImageHero from '../../assets/imgs/icon_heroi.png'

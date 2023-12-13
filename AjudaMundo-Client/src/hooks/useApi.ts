@@ -7,11 +7,17 @@ const api = axios.create({
 
 export const useApi = () => ({
   validateToken: async (token: string) => {},
-  signIn: async (email: string, password: string) => {
-    const response = await api.post('/ong/login', { email, password })
 
+  signInOng: async (email: string, password: string) => {
+    const response = await api.post('/ong/login', { email, password })
     return response.data
   },
+
+  signInUser: async (email: string, password: string) => {
+    const response = await api.post('/user/login', { email, password })
+    return response.data
+  },
+  
   getOngData: async (token: string) => {
     const response = await api.get('/ong/login/get-ong', {
       headers: {
@@ -21,11 +27,29 @@ export const useApi = () => ({
 
     return response.data
   },
-  signUp: async (ongName: string, email: string, password: string) => {
+
+  getUserData: async (token: string) => {
+    const response = await api.get('/user/login/get-user', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    return response.data
+  },
+
+  signUpOng: async (ongName: string, email: string, password: string) => {
     const response = await api.post('/ong', { name: ongName, email, password })
 
     return response.data
   },
+
+  signUpUser: async (userName: string, email: string, password: string) => {
+    const response = await api.post('/user', { name: userName, email, password })
+
+    return response.data
+  },
+
   getActivities: async (token: string) => {
     const response = await api.get('/activity/ong-activities', {
       headers: { Authorization: `Bearer ${token}` },
@@ -33,6 +57,7 @@ export const useApi = () => ({
 
     return response.data
   },
+
   getActivityById: async (token: string, activityId: number) => {
     const response = await api.get(`/activity/${activityId}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -40,6 +65,7 @@ export const useApi = () => ({
 
     return response.data
   },
+
   createActivity: async (token: string, fields: CreateActivityType) => {
     const { name, description, points, ongId, mainImg } = fields
     const response = await api.post(
@@ -58,6 +84,7 @@ export const useApi = () => ({
 
     return response.data
   },
+
   updateActivity: async (token: string, fields: UpdateActivityType) => {
     const { activityId, name, description, points, ongId, mainImg } = fields
 
@@ -81,6 +108,7 @@ export const useApi = () => ({
 
     return true
   },
+
   deleteActivity: async (token: string, activityId: number) => {
     const response = await api.delete(`/activity/${activityId}`, {
       headers: { Authorization: `Bearer ${token}` },

@@ -11,7 +11,7 @@ import {
   WrapperRegisterActivity,
   IconRegisterActivity,
   IconHero,
-} from './Home.styles'
+} from './HomeOng.styles'
 import ImageIconActivity from '../../assets/imgs/icon_cadastrar_atividade.png'
 import ImageHero from '../../assets/imgs/icon_heroi.png'
 import { ActivityCard } from '../../components'
@@ -24,7 +24,7 @@ interface HomeProps {
   children?: ReactNode
 }
 
-export const Home = ({ children }: HomeProps) => {
+export const HomeOng = ({ children }: HomeProps) => {
   const [activities, setActivities] = useState<ActivityType[] | []>([])
   const { getActivities } = useContext(ActivityContext)
   const navigate = useNavigate()

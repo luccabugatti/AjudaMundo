@@ -32,7 +32,7 @@ export const LogoImage = styled.img`
 `
 
 export const HeaderImage = styled.div`
-  height: 90%;
+  height: 60%;
   width: 100%;
 
   background-size: cover;

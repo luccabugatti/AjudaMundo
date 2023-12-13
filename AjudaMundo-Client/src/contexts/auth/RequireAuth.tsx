@@ -10,8 +10,9 @@ type RequireAuthType = {
 
 export const RequireAuth = ({ children }: RequireAuthType) => {
   const { ong } = useContext(AuthContext)
+  const { user } = useContext(AuthContext)
 
-  if (!ong) {
+  if (!ong && !user) {
     return <Navigate to="/" />
   }
 

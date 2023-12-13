@@ -11,7 +11,7 @@ import {
   HeaderNavigation,
   NavigationItem,
   RouteIndicator,
-} from './Header.styles'
+} from './HeaderOng.styles'
 
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -22,7 +22,7 @@ interface HeaderProps {
   tabs: string[]
 }
 
-export const Header = ({
+export const HeaderOng = ({
   children,
   headerImage = DefaultHeaderImage,
   loggedIn,

@@ -1,16 +1,20 @@
 import React, { useContext } from 'react'
 
 import {
-  Login,
-  Home,
+  LoginOng,
   HomeUser,
   NotFound,
-  Register,
-  Account,
+  RegisterOng,
   CreateActivity,
   EditActivity,
+  HomeOng,
+  LoginUser,
+  AcessType,
+  RegisterUser,
+  AccountUser,
+  AccountOng
 } from '../pages'
-import { Header, Footer } from '../components'
+import { HeaderOng, Footer, HeaderUser } from '../components'
 import { AuthContext, RequireAuth } from '../contexts'
 
 import {
@@ -21,21 +25,53 @@ import {
 } from 'react-router-dom'
 
 const Routing = () => {
-  const { ong } = useContext(AuthContext)
+  const { ong, user } = useContext(AuthContext)
 
-  const tabs = ['home', 'conta']
+
+  const tabsOng = ['home', 'conta']
+  const tabsUser = ['home', 'atividades', 'conta']
 
   return (
     <Router>
-      <Header loggedIn={ong ? true : false} tabs={tabs} />
+      {ong && <HeaderOng loggedIn={true} tabs={tabsOng} />}
+      {user && <HeaderUser loggedIn={true} tabs={tabsUser} />}
+      {!ong && !user && <HeaderOng loggedIn={false} tabs={tabsOng}/>}
       <Routes>
-        <Route path="/" element={ong ? <Navigate to={'/home'} /> : <Login />} />
-        <Route path="/cadastro" element={<Register />} />
+        <Route 
+          path="/" 
+          element={
+            <AcessType />
+          } 
+        />
         <Route
-          path="/home"
+          path="/login-ong"
+          element={
+              <LoginOng />
+          }
+        />
+        <Route
+          path="/login-user"
+          element={
+              <LoginUser />
+          }
+        />
+        <Route
+          path="/cadastro-ong"
+          element={
+              <RegisterOng />
+          }
+        />
+        <Route
+          path="/cadastro-user"
+          element={
+              <RegisterUser />
+          }
+        />
+        <Route
+          path="/home-ong"
           element={
             <RequireAuth>
-              <Home />
+              <HomeOng />
             </RequireAuth>
           }
         />
@@ -48,10 +84,18 @@ const Routing = () => {
           }
         />
         <Route
-          path="/conta"
+          path="/conta-user"
           element={
             <RequireAuth>
-              <Account />
+              <AccountUser />
+            </RequireAuth>
+          }
+        />
+         <Route
+          path="/conta-ong"
+          element={
+            <RequireAuth>
+              <AccountOng />
             </RequireAuth>
           }
         />
