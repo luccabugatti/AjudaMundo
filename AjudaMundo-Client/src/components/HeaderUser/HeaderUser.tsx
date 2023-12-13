@@ -51,7 +51,7 @@ export const HeaderUser = ({
       {loggedIn && (
         <HeaderNavigation>
           {tabs.map((tab, index) => (
-            <NavigationItem key={index} onClick={() => navigate(`/${formatTabName(tab).toLowerCase()}-user`)}>
+            <NavigationItem key={index} onClick={() => navigate(tab)}>
              {formatTabName(tab)}
             </NavigationItem>
           ))}
