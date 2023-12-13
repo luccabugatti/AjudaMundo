@@ -13,9 +13,9 @@ import {
 } from './AccountUser.styles'
 
 export const AccountUser = () => {
-  const { ong, signOut } = useContext(AuthContext)
+  const { user, signOut } = useContext(AuthContext)
 
-  if (!ong) {
+  if (!user) {
     signOut()
     return <></> 
   }
@@ -26,12 +26,12 @@ export const AccountUser = () => {
         <ProfileImage
           style={{
             backgroundImage: `url(${
-              ong.profileImg ? ong.profileImg : DefaultProfileImage
+              user.profileImg ? user.profileImg : DefaultProfileImage
             })`,
           }}
         />
-        <LabelOngName>{ong.name}</LabelOngName>
-        <LabelOngEmail>{ong.email}</LabelOngEmail>
+        <LabelOngName>{user.name}</LabelOngName>
+        <LabelOngEmail>{user.email}</LabelOngEmail>
         <ButtonLogout type={'button'} onClick={() => signOut()}>
           Sair da conta
         </ButtonLogout>

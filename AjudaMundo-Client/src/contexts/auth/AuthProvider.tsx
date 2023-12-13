@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }: AuthProviderType) => {
 
       if (token) {
         await getOngData(token)
+        await getUserData(token)
       }
     })()
   }, [])
@@ -135,6 +136,7 @@ export const AuthProvider = ({ children }: AuthProviderType) => {
 
   const signOut = (): void => {
     setOng(null)
+    setUser(null)
   }
 
   const setTokenOnLocalStorage = (token: string) => {
