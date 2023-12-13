@@ -136,4 +136,28 @@ export const useApi = () => ({
 
     return true
   },
+
+  assignToActivity: async (token: string, activityId: number) => {
+    const response = await api.post(
+      `/activity/assign/${activityId}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    )
+
+    return response.data
+  },
+
+  doActivity: async (token: string, activityId: number) => {
+    const response = await api.post(
+      `/activity/do/${activityId}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    )
+
+    return response.data
+  }
 })

@@ -23,22 +23,26 @@ export const AllActivities = ({ children }: HomeProps) => {
   useEffect(() => {
     ;(async () => {
       const activities = await getActivities()
+      const avialableActivities = activities.filter(activity => activity.status == 0)
 
-      setActivities(activities)
+      setActivities(avialableActivities)
     })()
   }, [])
+
+  console.log(activities.length)
   return (
     <Container>
       <Wrapper>
         <Indicator>Atividades disponiveis</Indicator>
-        {activities.length > 0 ? (
+        {activities.length > 0 && (
           <WrapperActivities>
             {activities.map((activity, index) => (
-              <ActivityCard key={index} activity={activity} />
+              activity.status == 0 && <ActivityCard key={index} activity={activity} />
             ))}
           </WrapperActivities>
-        ) : (
-          <LabelNoActivities>Nenhuma atividade cadastrada</LabelNoActivities>
+        )}
+        {activities.length == 0 && (
+          <LabelNoActivities>Nenhuma atividade disponível</LabelNoActivities>
         )}
       </Wrapper>
     </Container>

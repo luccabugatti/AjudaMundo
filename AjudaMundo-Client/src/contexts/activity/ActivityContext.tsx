@@ -13,6 +13,8 @@ export type ActivityContextType = {
   createActivity: (fields: CreateActivityType) => Promise<boolean>
   updateActivity: (fields: UpdateActivityType) => Promise<boolean>
   deleteActivity: (activityId: number) => Promise<boolean>
+  assignToActivity: (activityId: number) => Promise<boolean>
+  doActivity: (activityId: number) => Promise<boolean>
 }
 
 export const ActivityContext = createContext<ActivityContextType>(null!)

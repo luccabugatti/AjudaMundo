@@ -34,7 +34,7 @@ export const HomeUser = ({ children }: HomeProps) => {
   return (
     <Container>
       <WrapperLeft>
-        <Indicator>Atividades disponiveis</Indicator>
+        <Indicator>Minhas atividades</Indicator>
         {activities.length > 0 ? (
           <WrapperActivities>
             {activities.map((activity, index) => (

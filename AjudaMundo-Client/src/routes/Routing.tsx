@@ -13,7 +13,8 @@ import {
   RegisterUser,
   AccountUser,
   AccountOng,
-  AllActivities
+  AllActivities,
+  ActivityDetails
 } from '../pages'
 import { HeaderOng, Footer, HeaderUser, Header } from '../components'
 import { AuthContext, RequireAuth } from '../contexts'
@@ -113,6 +114,14 @@ const Routing = () => {
           element={
             <RequireAuth>
               <EditActivity />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/detalhes-atividade/:id"
+          element={
+            <RequireAuth>
+              <ActivityDetails />
             </RequireAuth>
           }
         />

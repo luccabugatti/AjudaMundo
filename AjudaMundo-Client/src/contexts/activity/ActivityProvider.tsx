@@ -99,6 +99,51 @@ export const ActivityProvider = ({ children }: ActivityProviderType) => {
     }
   }
 
+  const assignToActivity = async (
+    activityId: number
+  ): Promise<boolean> => {
+    try {
+      const token = localStorage.getItem('access-token')
+
+      if (token) {
+        const response = await api.assignToActivity(token, activityId)
+        if (response.assigned) {
+          return true
+        } else {
+          throw new Error('Falha ao se assinar à atividade!')
+        }
+      } else {
+        throw new Error('Falha na requisição axios!')
+      }
+    } catch (error) {
+      console.log('Erro ao se assinar à atividade', error)
+      throw error
+    }
+  }
+
+  const doActivity = async (
+    activityId: number
+  ): Promise<boolean> => {
+    try {
+      const token = localStorage.getItem('access-token')
+
+      if (token) {
+        const response = await api.doActivity(token, activityId)
+
+        if (response.doneActivity) {
+          return true
+        } else {
+          throw new Error('Falha ao finalizar atividade!')
+        }
+      } else {
+        throw new Error('Falha na requisição axios!')
+      }
+    } catch (error) {
+      console.log('Erro ao finalizar atividade', error)
+      throw error
+    }
+  }
+
   const updateActivity = async (
     fields: UpdateActivityType,
   ): Promise<boolean> => {
@@ -151,6 +196,8 @@ export const ActivityProvider = ({ children }: ActivityProviderType) => {
         createActivity,
         updateActivity,
         deleteActivity,
+        assignToActivity,
+        doActivity
       }}
     >
       {children}
